@@ -65,6 +65,12 @@ def main():
                 print("RAW-LINKS:", re.findall(r'(?:src|href|action)=["\']([^"\']+)', raw)[:60])
                 print("RAW-FETCH:", re.findall(r'(?:fetch|ajax|getJSON|axios\.get|\.get)\(\s*["\'`]([^"\'`]+)', raw)[:30])
                 print("RAW-JSON:", re.findall(r'[\w/.-]+\.json', raw)[:20])
+                for extra in ("data/hijri.js", "assets/js/prieres.js"):
+                    try:
+                        body = fetch(url + extra)
+                        print(f"FILE {extra} ({len(body)}):", body[:4000].replace("\n", " ⏎ "))
+                    except Exception as e:
+                        print(f"FILE {extra} ERR", e)
                 for sc in re.findall(r"<script[^>]*>(.*?)</script>", raw, flags=re.S)[:8]:
                     print("SCRIPT:", sc.strip()[:700].replace("\n", " "))
             text = clean(raw)

@@ -60,7 +60,14 @@ def main():
     found = []
     for url in URLS:
         try:
-            text = clean(fetch(url))
+            raw = fetch(url)
+            if "--debug" in sys.argv:
+                print("RAW-LINKS:", re.findall(r'(?:src|href|action)=["\']([^"\']+)', raw)[:60])
+                print("RAW-FETCH:", re.findall(r'(?:fetch|ajax|getJSON|axios\.get|\.get)\(\s*["\'`]([^"\'`]+)', raw)[:30])
+                print("RAW-JSON:", re.findall(r'[\w/.-]+\.json', raw)[:20])
+                for sc in re.findall(r"<script[^>]*>(.*?)</script>", raw, flags=re.S)[:8]:
+                    print("SCRIPT:", sc.strip()[:700].replace("\n", " "))
+            text = clean(raw)
         except Exception as e:  # الموقع في الصيانة أو يحجب الطلب
             print(f"تعذرت قراءة {url}: {e}")
             continue

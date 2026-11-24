@@ -1,0 +1,36 @@
+name: تحديث التقويم الهجري
+
+on:
+  schedule:
+    # كل نصف ساعة بين 18:00 و 23:30 بتوقيت المغرب (UTC)، وقت صدور بلاغات الوزارة
+    - cron: "5,35 18-23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hijri-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: قراءة بلاغات وزارة الأوقاف
+        run: python hijri-maroc/tools/update.py
+      - name: حفظ البلاغ الجديد
+        run: |
+          if git diff --quiet -- hijri-maroc/data.json; then
+            echo "لا تغيير"
+            exit 0
+          fi
+          git config user.name "hijri-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hijri-maroc/data.json
+          git commit -m "تحديث فواتح الشهور الهجرية من بلاغات الوزارة"
+          git push

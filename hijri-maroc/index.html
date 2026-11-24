@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>التقويم الهجري المغربي</title>
+<meta name="theme-color" content="#7d1020">
+<meta name="description" content="التقويم الهجري بالمغرب حسب بلاغات وزارة الأوقاف والشؤون الإسلامية">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: هادئ ورسمي، كورقة يومية معلّقة في مسجد مغربي
+   IDEA: ورقة "اليومية" الهجرية وحدها، بلا ميلادي
+   PICTURE: رقم اليوم الكبير وهلال بطوره حسب يوم الشهر
+   COLOUR and TYPE: أحمر مغربي عميق، أبيض الجير، فيروزي الزليج؛ Amiri وPlex Arabic
+   LAYOUT: الورقة والهلال وزر التحديث، ثم شبكة الشهر، ثم المناسبات والبلاغات */
+:root{color-scheme:light dark;--bg:light-dark(#fbf8f2,#1a0d0e);--ink:light-dark(#2a1214,#f6ece6);--red:light-dark(#a3192a,#e0505f);--deep:light-dark(#7d1020,#4a1219);--teal:light-dark(#0f7c78,#47c2bb);--line:light-dark(#e8ddd2,#3d2427);--mute:light-dark(#6f5a56,#c6b1ab);--cell:light-dark(#fff,#24141a)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans Arabic",Tahoma,sans-serif;overflow-x:clip}
+h1,h2{font-family:Amiri,serif;line-height:1.1;text-wrap:balance;margin:0 0 .4em}
+h2{font-size:30px;color:var(--red)}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1000px;margin:auto}
+.hero{background:var(--deep);color:#fff;background-image:radial-gradient(circle at 20% 0,#ffffff18,transparent 60%),repeating-conic-gradient(from 22.5deg,#ffffff07 0 45deg,transparent 45deg 90deg);background-size:auto,48px 48px}
+.top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center}
+.hero h1{font-size:clamp(32px,5vw,46px);color:#fff}
+.sheet{background:#fbf8f2;color:#2a1214;border-radius:6px;padding:22px 24px 24px;box-shadow:0 18px 40px #0005;position:relative;text-align:center;margin-top:16px}
+.sheet::before{content:"";position:absolute;inset:0 0 auto;height:14px;background:#a3192a;border-radius:6px 6px 0 0}
+.wd{font-size:20px;font-weight:600;margin-top:10px;color:#a3192a}
+.big{font:700 clamp(90px,18vw,150px)/1 Amiri,serif}
+.hm{font:700 32px/1.2 Amiri,serif}
+.tag{display:inline-block;font-size:13px;padding:2px 10px;border-radius:20px;margin-top:10px}
+.ok{background:#0f7c7822;color:#0b6b67}.ap{background:#c9851a26;color:#8a5a0a}
+.moonbox{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.moonbox svg{width:min(250px,60vw);height:auto}
+.upd{display:flex;flex-direction:column;gap:8px;align-items:center;width:100%;max-width:340px}
+.ask{background:#fbf8f2;color:#2a1214;border-radius:10px;padding:12px;width:100%;font-size:15px}button.pulse{outline:3px solid #ffd27a;outline-offset:3px}
+.st{font-size:14px;color:#f1dcd8;min-height:3em}
+button{font:inherit;font-size:16px;min-height:48px;border-radius:10px;border:0;background:#fff;color:#7d1020;font-weight:600;padding:0 20px;cursor:pointer;width:100%}
+button.ghost{background:transparent;color:var(--red);border:1px solid var(--red);width:auto}
+button[disabled]{opacity:.6;cursor:wait}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.mtitle{font:700 28px/1.2 Amiri,serif;text-align:center}.sub{font-size:14px;color:var(--mute);text-align:center}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.dn{text-align:center;font-size:13px;color:var(--mute);padding:4px 0}
+.c{border:1px solid var(--line);border-radius:6px;aspect-ratio:1/.8;display:grid;place-items:center;background:var(--cell);font:700 24px/1 Amiri,serif}
+.c.today{background:var(--red);color:#fff;border-color:var(--red)}
+.c.ev{color:var(--teal);box-shadow:inset 0 -3px 0 var(--teal)}.c.today.ev{color:#fff}
+.c.unc{border-style:dashed;color:var(--mute)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+table{width:100%;border-collapse:collapse}td{padding:9px 6px;border-bottom:1px solid var(--line)}td.n{white-space:nowrap;text-align:end;color:var(--mute);font-size:14px}
+.note{font-size:14px;color:var(--mute);max-width:70ch}a{color:var(--teal)}
+@media(max-width:700px){.top,.two{grid-template-columns:minmax(0,1fr)}.moonbox svg{width:130px}.c{font-size:19px}}
+@media(prefers-reduced-motion:no-preference){.sheet{animation:drop .5s ease-out}@keyframes drop{from{transform:translateY(-12px);opacity:0}}}
+</style></head><body>
+
+<header class="band hero"><div class="wrap top">
+  <div>
+    <h1>التقويم الهجري المغربي</h1>
+    <div class="sheet" id="sheet" aria-live="polite"></div>
+  </div>
+  <div class="moonbox">
+    <svg id="moon" viewBox="0 0 200 200" role="img" aria-label="طور القمر"></svg>
+    <div class="upd">
+      <button id="upd">تحديث من بلاغات الوزارة</button>
+      <div class="st" id="st">جارٍ قراءة آخر البلاغات…</div>
+      <div class="ask" id="ask" hidden></div>
+    </div>
+  </div>
+</div></header>
+
+<section class="band"><div class="wrap">
+  <div class="nav">
+    <button class="ghost" id="prev" aria-label="الشهر السابق">→</button>
+    <div><div class="mtitle" id="mt"></div><div class="sub" id="ms"></div></div>
+    <button class="ghost" id="next" aria-label="الشهر التالي">←</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section class="band" style="background:light-dark(#f3ece2,#211114)"><div class="wrap two">
+  <div><h2>المناسبات القادمة</h2><table><tbody id="ev"></tbody></table></div>
+  <div><h2>الشهور الثابتة ببلاغ</h2><div style="max-height:330px;overflow:auto"><table><tbody id="offT"></tbody></table></div></div>
+</div></section>
+
+<footer class="band"><div class="wrap note">
+  الشهر يثبت رسميا ببلاغ وزارة الأوقاف والشؤون الإسلامية عن رؤية الهلال، ويُتفقَّد موقع الوزارة آليا كل مساء. التطبيق يعمل دون إنترنت، ولا يحتاج إلى «تحديث» إلا من اليوم 28 إلى صدور بلاغ الشهر الجديد. الأيام المنقطة تقديرية إلى أن يصدر البلاغ. المصدر: <a href="https://www.habous.gov.ma/">habous.gov.ma</a>
+</div></footer>
+
+<script>
+{
+const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
+const WD=["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+// بيانات مضمّنة احتياطا (من بلاغات الوزارة) إلى أن يقرأ التطبيق قاعدة البيانات
+const BASE=[[1446,6,"2024-12-03"],[1446,11,"2025-04-29"],[1446,12,"2025-05-29"],
+[1447,1,"2025-06-27"],[1447,2,"2025-07-26"],[1447,3,"2025-08-25"],[1447,4,"2025-09-24"],[1447,5,"2025-10-24"],[1447,6,"2025-11-22"],[1447,7,"2025-12-22"],[1447,8,"2026-01-21"],[1447,9,"2026-02-19"],[1447,10,"2026-03-20"],[1447,11,"2026-04-19"],[1447,12,"2026-05-18"],
+[1448,1,"2026-06-17"],[1448,2,"2026-07-16"],[1448,3,"2026-08-14"],[1448,4,"2026-09-13"],[1448,5,"2026-10-13"],[1448,6,"2026-11-11"]/*NEXT*/];
+const EVENTS=[[1,1,"رأس السنة الهجرية"],[1,10,"عاشوراء"],[3,12,"عيد المولد النبوي"],[9,1,"فاتح رمضان"],[9,27,"ليلة القدر"],[10,1,"عيد الفطر"],[12,9,"يوم عرفة"],[12,10,"عيد الأضحى"]];
+const CK="hijri-ma-cache";
+let fetched=[];try{fetched=JSON.parse(localStorage.getItem(CK)||"[]")}catch(e){}
+
+
+const g2j=(y,m,d)=>{const a=Math.floor((14-m)/12),Y=y+4800-a,M=m+12*a-3;return d+Math.floor((153*M+2)/5)+365*Y+Math.floor(Y/4)-Math.floor(Y/100)+Math.floor(Y/400)-32045};
+const j2g=j=>{const a=j+32044,b=Math.floor((4*a+3)/146097),c=a-Math.floor(146097*b/4),d=Math.floor((4*c+3)/1461),e=c-Math.floor(1461*d/4),m=Math.floor((5*e+2)/153);return[100*b+d-4800+Math.floor(m/10),m+3-12*Math.floor(m/10),e-Math.floor((153*m+2)/5)+1]};
+const j2iso=j=>j2g(j).map((n,i)=>i?String(n).padStart(2,"0"):n).join("-");
+const iso2j=s=>{const p=String(s).split("-").map(Number);return p.length===3&&p.every(n=>n>0)?g2j(p[0],p[1],p[2]):null};
+const tab=(y,m)=>Math.ceil(29.5*(m-1))+(y-1)*354+Math.floor((3+11*y)/30)+1948439;
+const idx=(y,m)=>y*12+m-1, Y0=1420, Y1=1500;
+let starts={},lastOff=0;
+const $=id=>document.getElementById(id);
+
+function build(){
+  const off={};
+  for(const[y,m,g]of[...BASE,...fetched]){const j=iso2j(g);if(j&&y>=Y0&&y<=Y1&&m>=1&&m<=12)off[idx(y,m)]=j}
+  const keys=Object.keys(off).map(Number);
+  const d=keys.map(k=>off[k]-tab(Math.floor(k/12),k%12+1)).sort((a,b)=>a-b);
+  const shift=d[Math.floor(d.length/2)]||0;
+  starts={};
+  for(let k=idx(Y0,1);k<=idx(Y1,12);k++)starts[k]=off[k]!=null?{j:off[k],o:1}:{j:tab(Math.floor(k/12),k%12+1)+shift,o:0};
+  const lo=Math.min(...keys),hi=Math.max(...keys);lastOff=hi;
+  for(let k=hi+1;k<=idx(Y1,12);k++){const p=starts[k-1].j;starts[k].j=Math.min(Math.max(starts[k].j,p+29),p+30)}
+  for(let k=lo-1;k>=idx(Y0,1);k--){const n=starts[k+1].j;starts[k].j=Math.min(Math.max(starts[k].j,n-30),n-29)}
+}
+function toH(j){
+  let lo=idx(Y0,1),hi=idx(Y1,12);if(j<starts[lo].j||j>=starts[hi].j+30)return null;
+  while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(starts[mid].j<=j)lo=mid;else hi=mid-1}
+  const s=starts[lo],n=starts[lo+1],d=j-s.j+1;
+  return{y:Math.floor(lo/12),m:lo%12+1,d,k:lo,sure:!!(s.o&&(d<30||(n&&n.o)))};
+}
+const now=new Date();const TODAY=g2j(now.getFullYear(),now.getMonth()+1,now.getDate());
+let view;
+const wd=j=>WD[(j+1)%7];
+const htxt=h=>`${h.d} ${HM[h.m-1]} ${h.y}هـ`;
+
+function moon(d){
+  const p=((d-1)/29.53)%1,w=Math.abs(Math.cos(p*2*Math.PI)*70),wax=p<.5,gib=(p>.25&&p<.75);
+  const path=`M100 30 A70 70 0 0 ${wax?1:0} 100 170 A${w} 70 0 0 ${wax===gib?1:0} 100 30Z`;
+  $("moon").innerHTML=`<defs><radialGradient id="mg" cx="40%" cy="35%"><stop offset="0" stop-color="#fff8e6"/><stop offset="1" stop-color="#e9cf8f"/></radialGradient></defs><circle cx="100" cy="100" r="76" fill="#ffffff0d"/><circle cx="100" cy="100" r="70" fill="#00000045"/><path d="${path}" fill="url(#mg)"/>`;
+}
+function sheet(){
+  const h=toH(TODAY);if(!h)return;
+  $("sheet").innerHTML=`<div class="wd">${wd(TODAY)}</div><div class="big">${h.d}</div><div class="hm">${HM[h.m-1]} ${h.y}هـ</div><span class="tag ${h.sure?"ok":"ap"}">${h.sure?"ثابت ببلاغ الوزارة":"تقديري، في انتظار البلاغ"}</span>`;
+  moon(h.d);
+}
+const evOn=h=>EVENTS.filter(e=>e[0]===h.m&&e[1]===h.d);
+function grid(){
+  const s=starts[view],n=starts[view+1],len=n.j-s.j,y=Math.floor(view/12),m=view%12+1;
+  $("mt").textContent=`${HM[m-1]} ${y}هـ`;
+  $("ms").textContent=s.o?(n.o?`ثابت ببلاغ · ${len} يوما`:`فاتحه ثابت ببلاغ · 29 أو 30 يوما`):"تقديري في انتظار البلاغ";
+  let h=WD.map(w=>`<div class="dn">${w.replace("ال","").slice(0,3)}</div>`).join("");
+  for(let i=0;i<(s.j+1)%7;i++)h+="<div></div>";
+  for(let d=1;d<=len;d++){const j=s.j+d-1,hh=toH(j),ev=evOn(hh);
+    h+=`<div class="c${j===TODAY?" today":""}${ev.length?" ev":""}${hh.sure?"":" unc"}" title="${wd(j)} ${htxt(hh)}${ev.length?" · "+ev[0][2]:""}">${d}</div>`}
+  $("grid").innerHTML=h;
+}
+function lists(){
+  const t=toH(TODAY),out=[];
+  for(let k=idx(t.y,1);k<=idx(t.y+1,12);k++)for(const e of EVENTS)if(k%12+1===e[0]){const j=starts[k].j+e[1]-1;if(j>=TODAY)out.push([j,e[2],toH(j)])}
+  out.sort((a,b)=>a[0]-b[0]);
+  $("ev").innerHTML=out.slice(0,7).map(([j,n,h])=>`<tr><td><strong>${n}</strong><br><span style="font-size:14px">${wd(j)} ${htxt(h)}${h.sure?"":" (تقديري)"}</span></td><td class="n">${j===TODAY?"اليوم":"بعد "+(j-TODAY)+" يوما"}</td></tr>`).join("");
+  const off=Object.keys(starts).map(Number).filter(k=>starts[k].o).sort((a,b)=>b-a);
+  $("offT").innerHTML=off.map(k=>`<tr><td>فاتح ${HM[k%12]} ${Math.floor(k/12)}هـ</td><td class="n">يوم ${wd(starts[k].j)}</td></tr>`).join("");
+}
+function ask(){
+  const box=$("ask"),t=toH(TODAY);box.hidden=true;if(!t)return;
+  const k=t.k+1,nm=HM[k%12],cur=starts[t.k],nx=starts[k];
+  if(nx.o&&nx.j>TODAY){box.hidden=false;box.innerHTML=nx.j===TODAY+1?`<strong>غدا فاتح ${nm}</strong> حسب بلاغ الوزارة.`:`<strong>ثبت بالبلاغ:</strong> فاتح ${nm} يوم ${wd(nx.j)}.`;return}
+  if(cur.o&&!nx.o&&t.d>=28){box.hidden=false;box.innerHTML=`<strong>اقترب آخر ${HM[t.m-1]}.</strong> الشهر الهجري 29 أو 30 يوما حسب رؤية الهلال، فاضغط «تحديث» كل يوم حتى يصدر بلاغ الوزارة بفاتح ${nm}.`;$("upd").classList.add("pulse")}
+  else $("upd").classList.remove("pulse");
+}
+function all(){build();sheet();grid();lists();ask()}
+
+$("prev").onclick=()=>{view=Math.max(view-1,idx(Y0,1));grid()};
+$("next").onclick=()=>{view=Math.min(view+1,idx(Y1,11));grid()};
+
+const fmt=iso=>{try{return new Intl.DateTimeFormat("ar-MA",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Casablanca"}).format(new Date(iso))}catch(e){return""}};
+async function update(manual){
+  const b=$("upd"),st=$("st");b.disabled=true;b.textContent="جارٍ التحديث…";
+  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),12000);
+  try{
+    const r=await fetch("data.json?t="+Date.now(),{cache:"no-store",signal:ctl.signal});
+    if(!r.ok)throw 0;
+    const data=await r.json(),rows=[];
+    for(const v of (data.months||[])){const y=+v.y,m=+v.m,g=String(v.start||"");if(y&&m&&/^\d{4}-\d{2}-\d{2}$/.test(g))rows.push([y,m,g])}
+    const before=lastOff;fetched=rows;try{localStorage.setItem(CK,JSON.stringify(rows));localStorage.setItem(CK+"-t",String(data.checked||""))}catch(e){}
+    all();
+    const k=lastOff;
+    st.textContent=(k>before?"وصل بلاغ جديد. ":"")+`آخر بلاغ: فاتح ${HM[k%12]} ${Math.floor(k/12)}هـ (يوم ${wd(starts[k].j)})`+(data.checked?` · آخر إضافة: ${fmt(data.checked)}`:"");
+  }catch(e){
+    const k=lastOff;st.textContent=(manual?"لا يوجد اتصال الآن. ":"")+`آخر بلاغ محفوظ: فاتح ${HM[k%12]} ${Math.floor(k/12)}هـ`;
+  }
+  finally{clearTimeout(timer);b.disabled=false;b.textContent="تحديث من بلاغات الوزارة"}
+}
+$("upd").addEventListener("click",()=>update(true));
+
+build();view=toH(TODAY).k;all();
+const k0=lastOff;$("st").textContent=`آخر بلاغ محفوظ: فاتح ${HM[k0%12]} ${Math.floor(k0/12)}هـ`;
+update(false);
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+</script>
+</body></html>

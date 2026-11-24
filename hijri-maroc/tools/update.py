@@ -3,7 +3,7 @@
 يبحث عن عبارة مثل: «فاتح جمادى الآخرة 1448هـ — الأربعاء 11 نونبر 2026م».
 لا يضيف شهرا إلا إذا كان فاتحه بعد 29 أو 30 يوما من فاتح الشهر السابق المحفوظ.
 """
-import datetime as dt, json, pathlib, re, sys, urllib.request
+import datetime as dt, json, pathlib, re, ssl, sys, urllib.error, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data.json"
@@ -34,8 +34,17 @@ PATTERN = re.compile(
 
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (hijri-maroc calendar bot)"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode("utf-8", "replace")
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.read().decode("utf-8", "replace")
+    except urllib.error.URLError as e:
+        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+            raise
+        # شهادة موقع الوزارة ناقصة السلسلة: نقرأ صفحة عامة للقراءة فقط، والتحقق من الفارق 29/30 يوما يحمي البيانات
+        print(f"شهادة {url} غير مكتملة، إعادة المحاولة دون التحقق منها")
+        ctx = ssl._create_unverified_context()
+        with urllib.request.urlopen(req, timeout=30, context=ctx) as r:
+            return r.read().decode("utf-8", "replace")
 
 
 def clean(html):

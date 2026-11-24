@@ -1,6 +1,7 @@
 """يقرأ موقع وزارة الأوقاف ويضيف إلى data.json فاتح كل شهر هجري جديد معلن.
 
-يبحث عن عبارة مثل: «فاتح جمادى الآخرة 1448هـ — الأربعاء 11 نونبر 2026م».
+المصدر الأول ملف data/hijri.js الذي يعرض به موقع الوزارة التاريخ الهجري،
+وإن تعذر يبحث في الصفحة الرئيسية عن عبارة مثل: «فاتح جمادى الآخرة 1448هـ — الأربعاء 11 نونبر 2026م».
 لا يضيف شهرا إلا إذا كان فاتحه بعد 29 أو 30 يوما من فاتح الشهر السابق المحفوظ.
 """
 import datetime as dt, json, pathlib, re, ssl, sys, urllib.error, urllib.request
@@ -54,26 +55,35 @@ def clean(html):
     return re.sub(r"\s+", " ", text)
 
 
+# الملف الذي يعتمده موقع الوزارة نفسه لعرض التاريخ الهجري
+JS_ENTRY = re.compile(r"debut\s*:\s*['\"](\d{4}-\d{2}-\d{2})['\"]\s*,\s*mois\s*:\s*(\d{1,2})\s*,\s*annee\s*:\s*(\d{4})")
+
+
+def from_hijri_js(base):
+    url = base + "data/hijri.js"
+    out = []
+    for d, m, y in JS_ENTRY.findall(fetch(url)):
+        out.append((int(y), int(m), dt.date.fromisoformat(d), url))
+    print(f"{url}: {len(out)} شهرا")
+    return out
+
+
 def main():
     data = json.loads(DATA.read_text(encoding="utf-8"))
     months = {(r["y"], r["m"]): r for r in data["months"]}
     found = []
     for url in URLS:
         try:
-            raw = fetch(url)
-            if "--debug" in sys.argv:
-                print("RAW-LINKS:", re.findall(r'(?:src|href|action)=["\']([^"\']+)', raw)[:60])
-                print("RAW-FETCH:", re.findall(r'(?:fetch|ajax|getJSON|axios\.get|\.get)\(\s*["\'`]([^"\'`]+)', raw)[:30])
-                print("RAW-JSON:", re.findall(r'[\w/.-]+\.json', raw)[:20])
-                for extra in ("data/hijri.js", "assets/js/prieres.js"):
-                    try:
-                        body = fetch(url + extra)
-                        print(f"FILE {extra} ({len(body)}):", body[:4000].replace("\n", " ⏎ "))
-                    except Exception as e:
-                        print(f"FILE {extra} ERR", e)
-                for sc in re.findall(r"<script[^>]*>(.*?)</script>", raw, flags=re.S)[:8]:
-                    print("SCRIPT:", sc.strip()[:700].replace("\n", " "))
-            text = clean(raw)
+            found += from_hijri_js(url)
+        except Exception as e:
+            print(f"تعذرت قراءة hijri.js من {url}: {e}")
+        if found:
+            break
+    for url in URLS:
+        if found:
+            break
+        try:
+            text = clean(fetch(url))
         except Exception as e:  # الموقع في الصيانة أو يحجب الطلب
             print(f"تعذرت قراءة {url}: {e}")
             continue
@@ -83,13 +93,6 @@ def main():
             except ValueError:
                 continue
             found.append((int(mt["hy"]), HIJRI[mt["hm"]], start, url))
-        hits = [m.group(0) for m in PATTERN.finditer(text)]
-        print(f"{url}: {len(text)} حرفا، {len(hits)} عبارة فاتح: {hits[:3]}")
-        if not hits:
-            i = text.find("فاتح")
-            print("مقتطف:", text[max(0, i - 60):i + 160] if i >= 0 else text[:200])
-        if found:
-            break
 
     added = []
     for hy, hm, start, url in sorted(set(found)):

@@ -5,11 +5,6 @@ on:
     # كل نصف ساعة بين 18:00 و 23:30 بتوقيت المغرب (UTC)، وقت صدور بلاغات الوزارة
     - cron: "5,35 18-23 * * *"
   workflow_dispatch:
-    inputs:
-      debug:
-        description: "تشخيص"
-        required: false
-        default: ""
 
 permissions:
   contents: write
@@ -27,7 +22,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: قراءة بلاغات وزارة الأوقاف
-        run: python hijri-maroc/tools/update.py ${{ inputs.debug }}
+        run: python hijri-maroc/tools/update.py
       - name: حفظ البلاغ الجديد
         run: |
           if git diff --quiet -- hijri-maroc/data.json; then

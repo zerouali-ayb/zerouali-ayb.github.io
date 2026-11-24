@@ -70,6 +70,11 @@ def main():
             except ValueError:
                 continue
             found.append((int(mt["hy"]), HIJRI[mt["hm"]], start, url))
+        hits = [m.group(0) for m in PATTERN.finditer(text)]
+        print(f"{url}: {len(text)} حرفا، {len(hits)} عبارة فاتح: {hits[:3]}")
+        if not hits:
+            i = text.find("فاتح")
+            print("مقتطف:", text[max(0, i - 60):i + 160] if i >= 0 else text[:200])
         if found:
             break
 
